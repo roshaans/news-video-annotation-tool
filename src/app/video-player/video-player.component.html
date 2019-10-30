@@ -1,0 +1,171 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    <strong> Qualtrics Alterative Concept</strong>
+  </h1>
+  <div class = "rectangle"> 
+  <div style = "display: flex; flex-direction: column; justify-content: center;     align-items: center;"> 
+      <p style = "text-align: left;  width: 500px; ">
+          <strong> Market: </strong> {{market}}
+          <br/>
+          <strong> Text Snippet: </strong> {{textSnippet}}
+          <br/>
+          <strong> Suggested Start Time in Video#2: </strong>  {{suggestedStartTime | time}}
+          <br/>
+      </p>
+    </div>
+  </div>
+  <div style = "display: flex; justify-content: center;">
+      <mat-card [ngStyle] = "borderColorStart"  style = "line-height: 20px;margin-right: 15px;"> 
+
+          <mat-card-header>
+            <mat-card-title>
+              Story Start Time
+            </mat-card-title>
+          </mat-card-header>
+     <mat-card-content>
+
+      {{startTime |  time }} 
+      <br/>
+      in {{startTimeVideo}}
+     </mat-card-content>
+        </mat-card>
+  <div style = "display:flex; flex-direction: row;     border: 1px solid black;
+  width: max-content;
+  height: max-content;
+  border-radius: 40px;"> 
+  
+<ul style = "display: flex;align-items: center;">
+  <li id = "listItem" *ngFor="let item of videos; let $index = index"
+      (click)="onClickPlaylistItem(item, $index)"
+      [class.selected]="item === currentItem">
+      {{ item.title }}
+  </li>
+</ul>
+</div>
+<mat-card [ngStyle] = "borderColorEnd"  style = "line-height: 20px; margin-left: 15px;"> 
+
+    <mat-card-header>
+      <mat-card-title>
+        Story End Time
+      </mat-card-title>
+    </mat-card-header>
+<mat-card-content>
+
+{{endTime |  time }} 
+<br/>
+in {{endTimeVideo}}
+</mat-card-content>
+  </mat-card>
+</div>
+<div class = "cotainer">
+
+
+<vg-player (onPlayerReady)="onPlayerReady($event)">
+    <vg-overlay-play ></vg-overlay-play>
+
+  <vg-controls>
+    
+        <vg-play-pause></vg-play-pause>
+
+
+      <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+
+      <vg-scrub-bar>
+          <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+          <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+      </vg-scrub-bar>
+
+      <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+      <vg-playback-button></vg-playback-button>
+
+      <vg-mute></vg-mute>
+      <vg-volume></vg-volume>
+
+      <vg-fullscreen></vg-fullscreen>
+
+  </vg-controls>
+
+  <video #media
+  [vgMedia]="media"
+  [src]="currentItem.src"
+  id="singleVideo"
+  preload="auto"
+  >
+
+  <track src="../data/cue-points.vtt" kind="metadata" label="Cue Points" default
+               #metadataTrack
+               vgCuePoints
+               (onEnterCuePoint)="onEnterCuePoint($event)"
+               (onExitCuePoint)="onExitCuePoint($event)">
+
+</video>
+</vg-player>
+
+
+</div>
+
+
+    <!-- <md-button class="md-raised md-primary">Bookmark Start Time</md-button>
+    <md-button class="md-raised md-primary">Bookmark End Time</md-button> -->
+
+    <!-- <mat-sidenav-container class="example-container" *ngIf="shouldRun">
+        <mat-sidenav mode="side" opened>Sidenav content</mat-sidenav>
+        <mat-sidenav-content>Main content</mat-sidenav-content>
+      </mat-sidenav-container> -->
+    
+      <div class  = "cardContainer"> 
+    
+
+        <mat-card style = "background-color: #ffd740;"class="control">
+          <mat-card-header style = "    display: flex;
+          justify-content: center;">
+            <mat-card-title >
+              </mat-card-title>
+
+          </mat-card-header>
+   
+          <mat-card-actions style = "display: flex; flex-direction: row; justify-content: space-evenly; ">
+            <button (click) = "startButtonClicked()" style = "border-radius: 5px;
+            border: white;
+             width: 75px;
+            height: 50px;"    >
+            
+            <strong>Mark Start Time </strong> 
+              <br/>
+            </button>
+            <img style = "width: 50px; height:50px" src="assets/stopwatch.svg" alt="">
+
+            <button  (click) = "endButtonClicked()"  style = "border-radius: 5px;
+            border: white;
+            width: 75px;
+            height: 50px;"  >
+            
+            <strong>  Mark End Time</strong> 
+          
+          </button>
+            <!-- <div style = "display: flex; justify-content: center;">
+           
+          </div> -->
+
+          </mat-card-actions>
+          <button style = "display: flex; width: 200px; height: 50px; margin: 10px;"(click) = "seekToSuggested()"  mat-raised-button>Seek To Suggested Time</button>
+         <div style = "display: flex; justify-content: center; "> 
+          <button style = "display: flex; width: 100px; height: 50px; margin: 10px;"(click) = "resetTimer()"  mat-raised-button>Reset Timer</button>
+        </div>
+        </mat-card>
+
+      </div>
+
+</div>
+<div  style = "display: flex; flex-direction: row; justify-content: center; width: 500px; margin-right: 50px;">
+    <button [disabled] = false class = "myButton" > Next</button>
+
+<!-- <button class = "bookmarkButton" (click)="buttonClicked()" mat-raised-button  color="secondary"> 
+    <img src="assets/bookmark-24px.svg" alt="">
+
+  Bookmark Start Time</button>
+
+<button class = "bookmarkButtonTwo" (click) = "secClicked()" mat-raised-button  color="secondary">
+        <img src="assets/bookmark-24px.svg" alt="">
+  Bookmark End Time</button> -->
